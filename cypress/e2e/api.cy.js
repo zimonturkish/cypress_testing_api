@@ -60,18 +60,36 @@ describe("Learning REST API Testing with Cypress", () => {
   });
 
   // POST Request
-  it.only("API Tests - POST Request", () => {
+  it("API Tests - POST Request", () => {
     cy.request({
       url: "/login",
       method: "POST",
       body: { email: "eve.holt@reqres.in", password: "cityslicka" },
     }).as('loginRequest');
-    
+
     // Verifying the status code
     cy.get('@loginRequest').its('status').should('equal', 200)
 
     cy.get('@loginRequest').then((res) =>{
       expect(res.body.token).to.equal('QpwL5tke4Pnpja7X4')
+    })
+  })
+
+  // Negative example of POST request to handle error
+  it.only('API Test - POST Request - Error', () => {
+    cy.request({
+      url: "/login",
+      method: "POST",
+      body: { email: "eve.holt@reqres.in" },
+
+      //This allows not automatically treating a different status code as an error
+      failOnStatusCode: false
+    }).as('loginRequest');
+
+    // the error for a unsuccessfull POST request is 400
+    cy.get("@loginRequest").its("status").should("equal", 400);
+    cy.get("@loginRequest").then((res) => {
+      expect(res.body.error).to.equal('Missing password')
     })
   })
 })
