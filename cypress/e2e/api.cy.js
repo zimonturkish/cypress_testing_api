@@ -65,31 +65,38 @@ describe("Learning REST API Testing with Cypress", () => {
       url: "/login",
       method: "POST",
       body: { email: "eve.holt@reqres.in", password: "cityslicka" },
-    }).as('loginRequest');
+    }).as("loginRequest");
 
     // Verifying the status code
-    cy.get('@loginRequest').its('status').should('equal', 200)
+    cy.get("@loginRequest").its("status").should("equal", 200);
 
-    cy.get('@loginRequest').then((res) =>{
-      expect(res.body.token).to.equal('QpwL5tke4Pnpja7X4')
-    })
-  })
+    cy.get("@loginRequest").then((res) => {
+      expect(res.body.token).to.equal("QpwL5tke4Pnpja7X4");
+    });
+  });
 
   // Negative example of POST request to handle error
-  it.only('API Test - POST Request - Error', () => {
+  it.only("API Test - POST Request - Error", () => {
     cy.request({
       url: "/login",
       method: "POST",
       body: { email: "eve.holt@reqres.in" },
 
       //This allows not automatically treating a different status code as an error
-      failOnStatusCode: false
-    }).as('loginRequest');
+      failOnStatusCode: false,
+    }).as("loginRequest");
 
     // the error for a unsuccessfull POST request is 400
     cy.get("@loginRequest").its("status").should("equal", 400);
     cy.get("@loginRequest").then((res) => {
-      expect(res.body.error).to.equal('Missing password')
-    })
-  })
-})
+      expect(res.body.error).to.equal("Missing password");
+    });
+  });
+
+  // DELETE request
+  it.only("API Tests - DELETE Request", () => {
+    cy.request({ url: '/users/2', method: 'DELETE' }).as('deleteUser');
+    // assertion to verify that the status code is equal to 204
+    cy.get('@deleteUser').its('status').should('equal', 204)
+  });
+});
