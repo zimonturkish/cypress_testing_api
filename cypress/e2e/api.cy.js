@@ -106,6 +106,8 @@ describe("Learning REST API Testing with Cypress", () => {
       url: "/users/2",
       method: "PUT",
       body: { name: "updateName", job: "updateJob" },
+      // if an access token would be needed here should be placed
+      // auth: { bearer: 'my-token-value' }
     }).as("postRequest");
     cy.get("@postRequest").its("status").should("equal", 200);
     cy.get("@postRequest").then((res) => {
