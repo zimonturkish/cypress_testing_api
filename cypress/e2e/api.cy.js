@@ -76,7 +76,7 @@ describe("Learning REST API Testing with Cypress", () => {
   });
 
   // Negative example of POST request to handle error
-  it.only("API Test - POST Request - Error", () => {
+  it("API Test - POST Request - Error", () => {
     cy.request({
       url: "/login",
       method: "POST",
@@ -94,9 +94,23 @@ describe("Learning REST API Testing with Cypress", () => {
   });
 
   // DELETE request
-  it.only("API Tests - DELETE Request", () => {
-    cy.request({ url: '/users/2', method: 'DELETE' }).as('deleteUser');
+  it("API Tests - DELETE Request", () => {
+    cy.request({ url: "/users/2", method: "DELETE" }).as("deleteUser");
     // assertion to verify that the status code is equal to 204
-    cy.get('@deleteUser').its('status').should('equal', 204)
+    cy.get("@deleteUser").its("status").should("equal", 204);
+  });
+
+  it("API Testing - PUT Request", () => {
+    // POST request
+    cy.request({
+      url: "/users/2",
+      method: "PUT",
+      body: { name: "updateName", job: "updateJob" },
+    }).as("postRequest");
+    cy.get("@postRequest").its("status").should("equal", 200);
+    cy.get("@postRequest").then((res) => {
+      expect(res.body.name).to.equal('updateName')
+      expect(res.body.job).to.equal("updateJob")
+    });
   });
 });
